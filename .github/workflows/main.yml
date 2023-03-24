@@ -22,6 +22,9 @@ jobs:
           cmake . -B builds/c
           cmake --build builds/c
 
+      - name: Get gcovr
+        uses: threeal/gcovr-action@latest
+
       - name: Generate code coverage reports
         run: |
           mkdir builds/a/coverage-reports
