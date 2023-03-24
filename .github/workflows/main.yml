@@ -1,0 +1,32 @@
+name: main
+run-name: ${{ github.actor }} is working late, too late...
+
+on: push
+jobs:
+  process:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        build_type: [Release]
+    runs-on: ${{matrix.os}}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Build
+        run: |
+          cmake . -B builds/a
+          cmake --build builds/a
+          cmake . -B builds/b
+          cmake --build builds/b
+          cmake . -B builds/c
+          cmake --build builds/c
+
+      - name: Generate code coverage reports
+        run: |
+          mkdir builds/a/coverage-reports
+          mkdir builds/b/coverage-reports
+          mkdir builds/c/coverage-reports
+          gcovr --root . --xml --output builds/a/coverage-reports/gcov-results.xml builds/a
+          gcovr --root . --xml --output builds/b/coverage-reports/gcov-results.xml builds/b
+          gcovr --root . --xml --output builds/c/coverage-reports/gcov-results.xml builds/c
